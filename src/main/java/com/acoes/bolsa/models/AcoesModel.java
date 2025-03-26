@@ -19,6 +19,6 @@ public class AcoesModel {
 	@OneToMany
     public List<Stock> stocks;
     @OneToMany
-    public List<Sectors> availableSectors;
+    public List<String> availableSectors;
 }
 
