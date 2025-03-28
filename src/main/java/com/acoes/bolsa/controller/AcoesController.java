@@ -2,6 +2,7 @@ package com.acoes.bolsa.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,21 +21,63 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class AcoesController {
 	private StockService stockServ = new StockService();
 	
-	@GetMapping("/")
-	public String listarAcoes(){
+	@GetMapping("/altas")
+	public String listarAltas(){
 		try {
 			AcoesModel acao = new AcoesModel();
 			
 			ResponseEntity<?> resposta = stockServ.buscarAltas();
 			
+			// Valido se a resposta teve algo de errado, difícil pois ela está bem configurada e não depende do usuário
+			if(resposta.getStatusCode() != HttpStatus.OK) {
+				return "Algo deu errado: " + resposta.getBody();
+			}
+			
+			// Crio  e configuro o object mapper para desserializar os objetos
 			ObjectMapper objMap = new ObjectMapper();
 			objMap.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			
-			JsonNode root = objMap.readTree(resposta.getBody().toString()); //<--convert the json string to a JsonNode
-			JsonNode stocks = root.at("/stocks"); //<-- selecting the "data" part
+			// Crio "NÓS" de JSON para puxar informações específicar e popular um objeto
+			JsonNode root = objMap.readTree(resposta.getBody().toString());
+			JsonNode stocks = root.at("/stocks");
 			JsonNode availableSectors = root.at("/availableSectors");
-			//conversion to List<Rating> avoid problems due to list type erasure
-			//with the help of jackson TypeReference class
+			
+			// Então eu monto o objeto com as informações recebidas
+			acao.stocks = objMap.convertValue(stocks, new TypeReference<List<Stock>>() {});
+			acao.availableSectors = objMap.convertValue(availableSectors, new TypeReference<List<String>>() {});
+			
+			// Transformo o objeto em um JSON e retorno ele
+			String resultado = objMap.writeValueAsString(acao);
+			
+			
+			
+			return resultado;
+			
+			
+		} catch (Exception e) {
+			return e.getMessage();
+		}
+	}
+	
+	@GetMapping("/baixas")
+	public String listarBaixas(){
+		try {
+			AcoesModel acao = new AcoesModel();
+			
+			ResponseEntity<?> resposta = stockServ.buscarBaixas();
+			
+			if(resposta.getStatusCode() != HttpStatus.OK) {
+				return "Algo deu errado: " + resposta.getBody();
+			}
+			
+			ObjectMapper objMap = new ObjectMapper();
+			objMap.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			
+			JsonNode root = objMap.readTree(resposta.getBody().toString());
+			JsonNode stocks = root.at("/stocks");
+			JsonNode availableSectors = root.at("/availableSectors");
+			
+			
 			acao.stocks = objMap.convertValue(stocks, new TypeReference<List<Stock>>() {});
 			acao.availableSectors = objMap.convertValue(availableSectors, new TypeReference<List<String>>() {});
 			
@@ -46,8 +89,41 @@ public class AcoesController {
 			
 			
 		} catch (Exception e) {
-			return null;
+			return e.getMessage();
 		}
 	}
 
+	@GetMapping("/populares")
+	public String listarPopulares(){
+		try {
+			AcoesModel acao = new AcoesModel();
+			
+			ResponseEntity<?> resposta = stockServ.buscarPopulares();
+			
+			if(resposta.getStatusCode() != HttpStatus.OK) {
+				return "Algo deu errado: " + resposta.getBody();
+			}
+			
+			ObjectMapper objMap = new ObjectMapper();
+			objMap.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			
+			JsonNode root = objMap.readTree(resposta.getBody().toString());
+			JsonNode stocks = root.at("/stocks");
+			JsonNode availableSectors = root.at("/availableSectors");
+			
+			
+			acao.stocks = objMap.convertValue(stocks, new TypeReference<List<Stock>>() {});
+			acao.availableSectors = objMap.convertValue(availableSectors, new TypeReference<List<String>>() {});
+			
+			String resultado = objMap.writeValueAsString(acao);
+			
+			
+			
+			return resultado;
+			
+			
+		} catch (Exception e) {
+			return e.getMessage();
+		}
+	}
 }

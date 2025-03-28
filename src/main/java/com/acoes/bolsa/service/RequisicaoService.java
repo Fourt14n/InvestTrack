@@ -7,7 +7,7 @@ public class RequisicaoService {
 	static private RestTemplate restTemp = new RestTemplate();
 	static private String urlBase = "https://brapi.dev/api/";
 	
-	public static ResponseEntity<?> executeRequest(String endpoint, String filtros) {
+	protected static ResponseEntity<?> executeRequest(String endpoint, String filtros) {
 		String url = urlBase + endpoint + filtros;
  		ResponseEntity<?> resposta = restTemp.getForEntity(url, String.class);
 		
