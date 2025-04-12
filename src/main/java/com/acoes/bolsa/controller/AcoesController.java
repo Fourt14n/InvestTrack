@@ -1,15 +1,18 @@
 package com.acoes.bolsa.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.acoes.bolsa.models.AcoesModel;
 import com.acoes.bolsa.models.Stock;
+import com.acoes.bolsa.models.UniqueStock;
 import com.acoes.bolsa.service.StockService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -124,6 +127,35 @@ public class AcoesController {
 			
 		} catch (Exception e) {
 			return e.getMessage();
+		}
+	}
+	
+	@GetMapping("/{ticker}")
+	public String buscarAcao(@PathVariable("ticker") String ticker) {
+		try {
+			
+			List<UniqueStock> stock;
+			
+			ResponseEntity<?> resposta = stockServ.buscarAcao(ticker);
+			
+			if(resposta.getStatusCode() != HttpStatus.OK) {
+				return "Algo deu errado: " + resposta.getBody();
+			}
+			
+			ObjectMapper objMap = new ObjectMapper();
+			objMap.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			
+			JsonNode root = objMap.readTree(resposta.getBody().toString());
+			JsonNode stocks = root.at("/results");
+			
+			stock = objMap.convertValue(stocks, new TypeReference<List<UniqueStock>>() {});
+			
+			String resultado = objMap.writeValueAsString(stock.get(0));
+			
+			return resultado;
+			
+		} catch (Exception e) {
+			return "Ocorreu um erro interno: " + e.getMessage();
 		}
 	}
 }
