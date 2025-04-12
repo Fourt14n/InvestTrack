@@ -1,6 +1,7 @@
 package com.acoes.bolsa.service;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
 public class StockService {
@@ -55,6 +56,26 @@ public class StockService {
 			}
 			
 			return response;
+			
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro interno: " + e.getMessage());
+		}
+	}
+
+	public ResponseEntity<?> buscarAcao(String ticker){
+		endpoint = "quote/ticker";
+		endpoint = endpoint.replace("ticker", ticker);
+		
+		try {
+			
+			ResponseEntity<?> resposta = RequisicaoService.executeRequest(endpoint, filtros);
+			
+			if(resposta.getStatusCode() != HttpStatus.OK) {
+				return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("Serviço de requisição indisponível");
+			}
+			
+			return resposta;
+			
 			
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro interno: " + e.getMessage());
