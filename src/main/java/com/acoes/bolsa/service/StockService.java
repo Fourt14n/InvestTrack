@@ -6,10 +6,10 @@ import org.springframework.http.ResponseEntity;
 
 public class StockService {
 	private String filtros = "?token=s8qoLMnKWoEoFXMoiAeV57&type=stock";
-	private String endpoint = "quote/list";
 	
 	public ResponseEntity<?> buscarAltas() {
 		String filtro = "&sortBy=change&sortOrder=desc&limit=10";
+		String endpoint = "quote/list";
 		
 		try {
 			
@@ -28,6 +28,7 @@ public class StockService {
 	
 	public ResponseEntity<?> buscarBaixas() {
 		String filtro = "&sortBy=change&sortOrder=asc&limit=10";
+		String endpoint = "quote/list";
 		
 		try {
 			
@@ -46,6 +47,7 @@ public class StockService {
 	
 	public ResponseEntity<?> buscarPopulares() {
 		String filtro = "&sortBy=market_cap_basic&sortOrder=desc&limit=10";
+		String endpoint = "quote/list";
 		
 		try {
 			
@@ -63,7 +65,7 @@ public class StockService {
 	}
 
 	public ResponseEntity<?> buscarAcao(String ticker){
-		endpoint = "quote/ticker";
+		String endpoint = "quote/ticker";
 		endpoint = endpoint.replace("ticker", ticker);
 		
 		try {
