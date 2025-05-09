@@ -9,13 +9,15 @@ import lombok.Data;
 import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
 
+import java.util.UUID;
+
 
 @Data
 @Entity
 public class UserEntity {
    @Id
    @GeneratedValue(strategy = GenerationType.UUID)
-   private Long id;
+   private UUID id;
 
    @Pattern(regexp = "\\S+", message = "O campo [username] não deve conter espaço")
    private String username;

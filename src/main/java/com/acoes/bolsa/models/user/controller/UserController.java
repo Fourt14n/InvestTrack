@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
@@ -31,7 +32,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> atualizarUser (@PathVariable Long id, UserEntity userEntity){
+    public ResponseEntity<?> atualizarUser (@PathVariable UUID id, UserEntity userEntity){
 
         try {
             Optional<UserEntity> existeUser = userRepository.findById(id);
