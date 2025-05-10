@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.acoes.bolsa.models.AcoesModel;
-import com.acoes.bolsa.models.Stock;
-import com.acoes.bolsa.models.UniqueStock;
+import com.acoes.bolsa.models.acoes.Stock;
+import com.acoes.bolsa.models.acoes.UniqueStock;
+import com.acoes.bolsa.models.acoes.AcoesModel;
 import com.acoes.bolsa.service.StockService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
