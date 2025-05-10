@@ -3,6 +3,7 @@ package com.acoes.bolsa.models.user.controller;
 
 import com.acoes.bolsa.models.user.entity.UserEntity;
 import com.acoes.bolsa.models.user.repository.UserRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +20,9 @@ public class UserController {
     private UserRepository userRepository;
 
     @PostMapping("/")
-    public ResponseEntity<?> criarUser (@RequestBody UserEntity userEntity){
+    public ResponseEntity<?> criarUser (@Valid @RequestBody UserEntity userEntity){
         try {
-            if (userEntity.getEmail().isEmpty() || userEntity.getPassword().isEmpty()){
+            if (userEntity.getUsername().isEmpty() || userEntity.getEmail().isEmpty() || userEntity.getPassword().isEmpty()){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Os campos devem ser preenchidos");
             }
             UserEntity user = userRepository.save(userEntity);
