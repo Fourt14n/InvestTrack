@@ -19,11 +19,17 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/acoes")
+@Tag(name = "Tela inicial", description = "Rotas para popular a tela inicial")
 public class AcoesController {
 	private StockService stockServ = new StockService();
 	
+	@Operation(summary = "Puxa as ações em alta, as que tem o maior 'change' as com maior porcentagem de valorização")
+	@Tag(name = "Tela inicial")
 	@GetMapping("/altas")
 	public String listarAltas(){
 		try {
@@ -62,6 +68,8 @@ public class AcoesController {
 		}
 	}
 	
+	@Operation(summary = "Puxa as ações em baixa, com o menor 'change', as com menor porcentagem de valorização")
+	@Tag(name = "Tela inicial")
 	@GetMapping("/baixas")
 	public String listarBaixas(){
 		try {
@@ -95,7 +103,9 @@ public class AcoesController {
 			return e.getMessage();
 		}
 	}
-
+	
+	@Operation(summary = "Puxa as ações mais populares, as com o maior 'market_cap', ou seja, as mais compradas")
+	@Tag(name = "Tela inicial")
 	@GetMapping("/populares")
 	public String listarPopulares(){
 		try {
@@ -130,6 +140,8 @@ public class AcoesController {
 		}
 	}
 	
+	@Operation(summary = "Puxa uma ação pelo valor de ticker dela, EX: itub3, PETR4")
+	@Tag(name = "Ação específica", description = "Rota para puxar uma ação específica, para gerar os cards e as telas específicas por ação")
 	@GetMapping("/{ticker}")
 	public String buscarAcao(@PathVariable("ticker") String ticker) {
 		try {
