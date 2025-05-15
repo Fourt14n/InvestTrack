@@ -1,4 +1,4 @@
-package com.acoes.bolsa.models;
+package com.acoes.bolsa.models.acoes;
 
 import lombok.Data;
 
