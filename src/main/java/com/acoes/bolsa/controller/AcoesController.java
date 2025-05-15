@@ -140,7 +140,7 @@ public class AcoesController {
 		}
 	}
 	
-	@Operation(summary = "Puxa uma ação pelo valor de ticker dela, EX: itub3, PETR4")
+	@Operation(summary = "Puxa uma ação pelo valor de ticker dela através da URL, EX: itub3, PETR4")
 	@Tag(name = "Ação específica", description = "Rota para puxar uma ação específica, para gerar os cards e as telas específicas por ação")
 	@GetMapping("/{ticker}")
 	public String buscarAcao(@PathVariable("ticker") String ticker) {
