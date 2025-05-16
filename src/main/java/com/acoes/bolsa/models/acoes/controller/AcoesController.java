@@ -1,4 +1,4 @@
-package com.acoes.bolsa.controller;
+package com.acoes.bolsa.models.acoes.controller;
 
 import java.util.List;
 
