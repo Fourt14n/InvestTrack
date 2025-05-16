@@ -29,8 +29,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body(token);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuario ou senha incorreto");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // TODO: handle exception
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Ocorreu um erro interno no servidor");
@@ -38,20 +37,17 @@ public class UserController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<?> criarUser (@Valid @RequestBody UserEntity userEntity){
+    public ResponseEntity<?> criarUser(@Valid @RequestBody UserEntity userEntity) {
         try {
-            if (userEntity.getUsername().isEmpty() || userEntity.getEmail().isEmpty() || userEntity.getPassword().isEmpty()){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Os campos devem ser preenchidos");
-            }
             UserEntity user = userRepository.save(userEntity);
             return ResponseEntity.ok(user);
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro interno em nosso servidor");
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> atualizarUser (@PathVariable UUID id, UserEntity userEntity){
+    public ResponseEntity<?> atualizarUser(@PathVariable UUID id, UserEntity userEntity) {
 
         try {
             Optional<UserEntity> existeUser = userRepository.findById(id);
@@ -62,16 +58,15 @@ public class UserController {
 
                 userRepository.save(user);
                 return ResponseEntity.ok("Usuario atualizado");
-            }else {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                    .body("Nenhum usuario encontrado");
+            } else {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                        .body("Nenhum usuario encontrado");
             }
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro interno em nosso servidor");
         }
     }
-
 
 
 }
