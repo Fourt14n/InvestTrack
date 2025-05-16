@@ -1,7 +1,6 @@
 package com.acoes.bolsa.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.acoes.bolsa.models.acoes.Stock;
 import com.acoes.bolsa.models.acoes.UniqueStock;
 import com.acoes.bolsa.models.acoes.AcoesModel;
+
 import com.acoes.bolsa.service.StockService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
