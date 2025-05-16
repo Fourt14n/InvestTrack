@@ -2,7 +2,6 @@ package com.acoes.bolsa.models.acoes;
 
 import java.util.List;
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
