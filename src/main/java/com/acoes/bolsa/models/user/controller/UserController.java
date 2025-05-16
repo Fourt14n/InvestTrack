@@ -1,6 +1,7 @@
 package com.acoes.bolsa.models.user.controller;
 
 
+import com.acoes.bolsa.auth.AuthenticateUseCase;
 import com.acoes.bolsa.models.user.entity.UserEntity;
 import com.acoes.bolsa.models.user.repository.UserRepository;
 import jakarta.validation.Valid;
@@ -18,6 +19,22 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody UserEntity user) {
+        try {
+            AuthenticateUseCase auth = new AuthenticateUseCase(userRepository);
+            String token = auth.execute(user.getEmail(), user.getPassword());
+            return ResponseEntity.status(HttpStatus.OK).body(token);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuario ou senha incorreto");
+        }
+        catch (Exception e) {
+            // TODO: handle exception
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ocorreu um erro interno no servidor");
+        }
+    }
 
     @PostMapping("/")
     public ResponseEntity<?> criarUser (@Valid @RequestBody UserEntity userEntity){
