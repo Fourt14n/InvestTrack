@@ -1,14 +1,15 @@
 package com.acoes.bolsa.models.user.controller;
 
 
-import com.acoes.bolsa.auth.AuthenticateUseCase;
+import com.acoes.bolsa.useCase.AuthenticateUseCase;
 import com.acoes.bolsa.models.user.entity.UserEntity;
 import com.acoes.bolsa.models.user.repository.UserRepository;
+import com.acoes.bolsa.useCase.CreateUser;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -20,11 +21,16 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private CreateUser createUser;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserEntity user) {
         try {
-            AuthenticateUseCase auth = new AuthenticateUseCase(userRepository);
+            AuthenticateUseCase auth = new AuthenticateUseCase(userRepository, passwordEncoder);
             String token = auth.execute(user.getEmail(), user.getPassword());
             return ResponseEntity.status(HttpStatus.OK).body(token);
         } catch (RuntimeException e) {
@@ -39,34 +45,11 @@ public class UserController {
     @PostMapping("/")
     public ResponseEntity<?> criarUser(@Valid @RequestBody UserEntity userEntity) {
         try {
-            UserEntity user = userRepository.save(userEntity);
-            return ResponseEntity.ok(user);
+            var result = this.createUser.execute(userEntity);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro interno em nosso servidor");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<?> atualizarUser(@PathVariable UUID id, UserEntity userEntity) {
-
-        try {
-            Optional<UserEntity> existeUser = userRepository.findById(id);
-            if (existeUser.isPresent()) {
-                UserEntity user = existeUser.get();
-                user.setEmail(user.getEmail());
-                user.setPassword(user.getPassword());
-
-                userRepository.save(user);
-                return ResponseEntity.ok("Usuario atualizado");
-            } else {
-                return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                        .body("Nenhum usuario encontrado");
-            }
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro interno em nosso servidor");
-        }
-    }
-
 
 }
