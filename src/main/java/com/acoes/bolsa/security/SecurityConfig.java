@@ -16,8 +16,10 @@ public class   SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/user/").permitAll()
-                            .requestMatchers("/user/login").permitAll();
+                    auth.requestMatchers("/user/**").permitAll()
+                            .requestMatchers("/user/login").permitAll()
+                    		.requestMatchers("/swagger-ui/**").permitAll()
+                    		.requestMatchers("/v3/**").permitAll();
                 auth.anyRequest().authenticated();
                 });
     return http.build();
