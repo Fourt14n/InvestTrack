@@ -64,6 +64,25 @@ public class StockService {
 		}
 	}
 
+	public ResponseEntity<?> pesquisaAcoes(String pesquisa) {
+		String filtro = "&limit=10&search=" + pesquisa;
+		String endpoint = "/available";
+		
+		try {
+			
+			ResponseEntity<?> response = RequisicaoService.executeRequest(endpoint, filtros + filtro);
+			
+			if(response.getStatusCode() != HttpStatus.OK) {
+				return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("Serviço de requisição indisponível");
+			}
+			
+			return response;
+			
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro interno: " + e.getMessage());
+		}
+	}
+	
 	public ResponseEntity<?> buscarAcao(String ticker){
 		String endpoint = "quote/ticker";
 		endpoint = endpoint.replace("ticker", ticker);

@@ -1,7 +1,9 @@
 package com.acoes.bolsa.models.acoes.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -137,6 +139,38 @@ public class AcoesController {
 			
 		} catch (Exception e) {
 			return e.getMessage();
+		}
+	}
+	
+	@Operation(summary = "Puxa as ações baseado em um pedaço de texto, para pesquisa")
+	@Tag(name = "Tela inicial")
+	@GetMapping("/pesquisaAcoes/{pesquisa}")
+	public List<String> pesquisaAcoes(@PathVariable String pesquisa){
+		try {
+			ArrayList<String> retorno = new ArrayList<String>();
+			
+			ResponseEntity<?> resposta = stockServ.pesquisaAcoes(pesquisa);
+			
+			if(resposta.getStatusCode() != HttpStatus.OK) {
+				retorno.add("Algo deu errado: " + resposta.getBody());
+				return retorno;
+			}
+			
+			ObjectMapper objMap = new ObjectMapper();
+			objMap.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			
+			JsonNode root = objMap.readTree(resposta.getBody().toString());
+			JsonNode stocks = root.at("/stocks");
+			
+			retorno = objMap.convertValue(stocks, new TypeReference<ArrayList<String>>() {});
+			
+			return retorno;
+			
+			
+		} catch (Exception e) {
+			ArrayList<String> retornoErro = new ArrayList<String>();
+			retornoErro.add(e.getMessage());
+			return retornoErro;
 		}
 	}
 	
