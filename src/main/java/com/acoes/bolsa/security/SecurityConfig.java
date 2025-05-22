@@ -20,7 +20,8 @@ public class   SecurityConfig {
                             .requestMatchers("/user/login").permitAll()
                             .requestMatchers("/acoes/**").permitAll()
                     		.requestMatchers("/swagger-ui/**").permitAll()
-                    		.requestMatchers("/v3/**").permitAll();
+                    		.requestMatchers("/v3/**").permitAll()
+                    		.requestMatchers("/favoritos/**").permitAll();
                 auth.anyRequest().authenticated();
                 });
     return http.build();
