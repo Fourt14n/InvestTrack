@@ -25,21 +25,27 @@ public class SecurityFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         //Zerando autenticações
-        SecurityContextHolder.getContext().setAuthentication(null);
+//        SecurityContextHolder.getContext().setAuthentication(null);
         String header = request.getHeader("Authorization");
 
-        if (header != null) {
-            var subjectToken = this.jwtUserProvider.validadeToken(header);
 
-            if (subjectToken.isEmpty()) {
-                ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
+        if(request.getRequestURI().startsWith("/favoritos")){
+            if (header != null) {
+                var subjectToken = this.jwtUserProvider.validadeToken(header);
+
+                if (subjectToken.isEmpty()) {
+                    ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED);
+                    return;
+                }
+
+                request.setAttribute("", subjectToken);
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(subjectToken,
+                        Collections.emptyList());
+                SecurityContextHolder.getContext().setAuthentication(auth);
             }
-            request.setAttribute("", subjectToken);
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(subjectToken,
-                    Collections.emptyList());
-            SecurityContextHolder.getContext().setAuthentication(auth);
+
         }
+
         filterChain.doFilter(request, response);
 
     }

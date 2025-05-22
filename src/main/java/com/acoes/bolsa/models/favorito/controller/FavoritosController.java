@@ -1,4 +1,4 @@
-package com.acoes.bolsa.models.favoritos.controller;
+package com.acoes.bolsa.models.favorito.controller;
 
 import com.acoes.bolsa.service.FavoritosServices;
 import org.springframework.beans.factory.annotation.Autowired;

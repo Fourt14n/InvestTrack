@@ -3,7 +3,7 @@ package com.acoes.bolsa.service;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.acoes.bolsa.favoritos.repository.AcaoFavoritaRepository;
+import com.acoes.bolsa.models.favorito.repository.AcaoFavoritaRepository;
 import com.acoes.bolsa.models.acoes.AcaoFavorita;
 import com.acoes.bolsa.models.user.entity.UserEntity;
 import com.acoes.bolsa.models.user.repository.UserRepository;
