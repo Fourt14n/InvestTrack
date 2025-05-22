@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/user")
 @Tag(name = "Rotas de usuários", description = "Todas as rotas relacionadas ao gerenciamento de usuários")
