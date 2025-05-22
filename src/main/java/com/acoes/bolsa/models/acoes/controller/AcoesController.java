@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.acoes.bolsa.models.acoes.Stock;
+import com.acoes.bolsa.models.acoes.StockPrices;
 import com.acoes.bolsa.models.acoes.UniqueStock;
 import com.acoes.bolsa.models.acoes.AcoesModel;
 
