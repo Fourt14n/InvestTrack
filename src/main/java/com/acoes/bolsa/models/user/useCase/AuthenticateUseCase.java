@@ -1,8 +1,7 @@
-package com.acoes.bolsa.auth;
+package com.acoes.bolsa.models.user.useCase;
 
 import com.acoes.bolsa.models.user.dto.AuthUserRequestDTO;
 import com.acoes.bolsa.models.user.dto.AuthUserResponseDTO;
-import com.acoes.bolsa.models.user.entity.UserEntity;
 import com.acoes.bolsa.models.user.repository.UserRepository;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -16,15 +15,15 @@ import javax.naming.AuthenticationException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.Date;
 
 @Service
 public class AuthenticateUseCase {
 
     @Autowired
-    private final UserRepository userRepository;
+    private UserRepository userRepository;
     @Value("{security.token.secret.user}")
     private  String secretKey;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -34,7 +33,7 @@ public class AuthenticateUseCase {
 
     public AuthUserResponseDTO execute(AuthUserRequestDTO authUserRequestDTO) throws
             AuthenticationException {
-        var user = this.userRepository.findByEmailAndPassword(authUserRequestDTO.email(), authUserRequestDTO.password())
+        var user = this.userRepository.findByUsername(authUserRequestDTO.username())
                 .orElseThrow(() -> new UsernameNotFoundException("Username/Senha incorretos"));
         var passwordMatches = this.passwordEncoder
                 .matches(authUserRequestDTO.password(), user.getPassword());

@@ -1,4 +1,4 @@
 package com.acoes.bolsa.models.user.dto;
 
-public record AuthUserRequestDTO(String email, String password) {
+public record AuthUserRequestDTO(String username, String password) {
 }
