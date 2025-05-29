@@ -13,23 +13,24 @@ public class JWTUserProvider {
     @Value("${security.token.secret.user}")
     private String secretKey;
 
-    public DecodedJWT validadeToken(String token) {
-        if (token == null || !token.startsWith("Bearer ")) {
-            return null;
-        }
 
-        token = token.replace("Bearer ", "").trim(); // remove prefixo e espaços
-
+    public String validateToken(String token) {
         try {
+            token = token.replace("Bearer", "").trim();
+
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
-            return JWT.require(algorithm)
-                    .withIssuer("java")
+            DecodedJWT jwt = JWT.require(algorithm)
                     .build()
                     .verify(token);
+
+            return jwt.getSubject();
+
         } catch (JWTVerificationException e) {
-            e.printStackTrace();
+            System.err.println("Token verification failed: " + e.getMessage());
+            return null;
+        } catch (Exception e) {
+            System.err.println("Unexpected error during token validation: " + e.getMessage());
             return null;
         }
     }
 }
-

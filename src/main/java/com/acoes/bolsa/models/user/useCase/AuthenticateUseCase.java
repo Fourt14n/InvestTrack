@@ -15,14 +15,15 @@ import javax.naming.AuthenticationException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.Date;
 
 @Service
 public class AuthenticateUseCase {
 
     @Autowired
     private UserRepository userRepository;
-    @Value("{security.token.secret.user}")
-    private  String secretKey;
+    @Value("${security.token.secret.user}")
+    private String secretKey;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -42,13 +43,17 @@ public class AuthenticateUseCase {
             throw new AuthenticationException();
         }
 
+        System.out.println(secretKey);
+
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
         var expireIn = Instant.now().plus(Duration.ofMinutes(10));
         var token = JWT.create()
                 .withIssuer("java")
                 .withSubject(user.getId().toString())
+                .withIssuedAt(new Date()) // agora
+                .withNotBefore(new Date()) // também agora
+                .withExpiresAt(new Date(System.currentTimeMillis() + 3600_000))
                 .withClaim("roles", Arrays.asList("USER"))
-                .withIssuedAt(expireIn)
                 .sign(algorithm);
 
         var authUserResponse = AuthUserResponseDTO.builder()

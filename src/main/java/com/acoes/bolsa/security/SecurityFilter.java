@@ -24,33 +24,32 @@ public class SecurityFilter extends OncePerRequestFilter {
     private JWTUserProvider jwtUserProvider;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
             throws ServletException, IOException {
 
-        String header = request.getHeader("Authorization");
+        String authHeader = request.getHeader("Authorization");
 
-        if (header != null && request.getRequestURI()
-                .startsWith("/favoritos")) {
-            var token = this.jwtUserProvider.validadeToken(header);
+        if (authHeader != null) {
+            try {
+                String token = authHeader.replace("Bearer ", "").trim();
+                String userId = jwtUserProvider.validateToken(token);
 
-            if (token == null) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("Token inválido");
+                if (userId == null || userId.isEmpty()) {
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inválido");
+                    return;
+                }
+
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(userId, null, Collections.emptyList());
+
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            } catch (Exception e) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Falha na autenticação");
                 return;
             }
-
-            // Setar o ID do usuário para outros filtros/serviços
-            request.setAttribute("userId", token.getSubject());
-
-            var roles = token.getClaim("roles").asList(String.class);
-            var authorities = roles.stream()
-                    .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
-                    .toList();
-
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(token.getSubject(), null, authorities);
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         filterChain.doFilter(request, response);
