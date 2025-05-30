@@ -91,11 +91,12 @@
 			<version>26.0.2</version>
 			<scope>compile</scope>
 		</dependency>
-		<dependency>
-    <groupId>mysql</groupId>
-    <artifactId>mysql-connector-java</artifactId>
-    <version>5.1.34</version>
+<dependency>
+    <groupId>javax.persistence</groupId>
+    <artifactId>persistence-api</artifactId>
+    <version>1.0.2</version>
 </dependency>
+
 
 	</dependencies>
 
