@@ -85,11 +85,12 @@ public class StockService {
 	
 	public ResponseEntity<?> buscarAcao(String ticker){
 		String endpoint = "quote/ticker";
+		String filtrosEspecificos = "&range=1mo&interval=1d&fundamental=true";
 		endpoint = endpoint.replace("ticker", ticker);
 		
 		try {
 			
-			ResponseEntity<?> resposta = RequisicaoService.executeRequest(endpoint, filtros);
+			ResponseEntity<?> resposta = RequisicaoService.executeRequest(endpoint, filtros + filtrosEspecificos);
 			
 			if(resposta.getStatusCode() != HttpStatus.OK) {
 				return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("Serviço de requisição indisponível");
