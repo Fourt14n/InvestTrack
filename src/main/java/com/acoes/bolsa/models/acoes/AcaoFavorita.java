@@ -6,7 +6,7 @@ import lombok.Data;
 import com.acoes.bolsa.models.user.entity.UserEntity;
 
 @Data
-@Entity
+@Entity (name = "favoritos")
 public class AcaoFavorita {
 
     @Id
