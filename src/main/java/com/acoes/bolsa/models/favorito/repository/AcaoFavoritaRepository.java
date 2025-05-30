@@ -1,4 +1,4 @@
-package com.acoes.bolsa.favoritos.repository;
+package com.acoes.bolsa.models.favorito.repository;
 
 import com.acoes.bolsa.models.acoes.AcaoFavorita;
 import com.acoes.bolsa.models.user.entity.UserEntity;

@@ -8,7 +8,7 @@ public class StockService {
 	private String filtros = "?token=s8qoLMnKWoEoFXMoiAeV57&type=stock";
 	
 	public ResponseEntity<?> buscarAltas() {
-		String filtro = "&sortBy=change&sortOrder=desc&limit=10";
+		String filtro = "&sortBy=change&sortOrder=desc&limit=5";
 		String endpoint = "quote/list";
 		
 		try {
@@ -27,7 +27,7 @@ public class StockService {
 	}
 	
 	public ResponseEntity<?> buscarBaixas() {
-		String filtro = "&sortBy=change&sortOrder=asc&limit=10";
+		String filtro = "&sortBy=change&sortOrder=asc&limit=5";
 		String endpoint = "quote/list";
 		
 		try {
@@ -46,7 +46,7 @@ public class StockService {
 	}
 	
 	public ResponseEntity<?> buscarPopulares() {
-		String filtro = "&sortBy=market_cap_basic&sortOrder=desc&limit=10";
+		String filtro = "&sortBy=market_cap_basic&sortOrder=desc&limit=5";
 		String endpoint = "quote/list";
 		
 		try {

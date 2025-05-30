@@ -8,10 +8,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.Collections;
 
@@ -22,25 +24,34 @@ public class SecurityFilter extends OncePerRequestFilter {
     private JWTUserProvider jwtUserProvider;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
             throws ServletException, IOException {
-        //Zerando autenticações
-        SecurityContextHolder.getContext().setAuthentication(null);
-        String header = request.getHeader("Authorization");
 
-        if (header != null) {
-            var subjectToken = this.jwtUserProvider.validadeToken(header);
+        String authHeader = request.getHeader("Authorization");
 
-            if (subjectToken.isEmpty()) {
-                ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED);
+        if (authHeader != null) {
+            try {
+                String token = authHeader.replace("Bearer ", "").trim();
+                String userId = jwtUserProvider.validateToken(token);
+
+                if (userId == null || userId.isEmpty()) {
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inválido");
+                    return;
+                }
+
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(userId, null, Collections.emptyList());
+
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            } catch (Exception e) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Falha na autenticação");
                 return;
             }
-            request.setAttribute("", subjectToken);
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(subjectToken,
-                    Collections.emptyList());
-            SecurityContextHolder.getContext().setAuthentication(auth);
         }
-        filterChain.doFilter(request, response);
 
+        filterChain.doFilter(request, response);
     }
 }
