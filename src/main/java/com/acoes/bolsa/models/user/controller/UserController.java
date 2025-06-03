@@ -57,7 +57,7 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu  dsadsadsdas um erro interno em nosso servidor");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro interno em nosso servidor: " + e.getMessage());
         }
     }
 
