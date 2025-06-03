@@ -11,16 +11,22 @@ import java.util.UUID;
 
 @Data
 @Entity(name = "user")
+@Table(name = "user")
 public class UserEntity {
    @Id
    @GeneratedValue(strategy = GenerationType.UUID)
+   @Column(name = "id")
    private UUID id;
-
+   
+   @Column(name = "username")
    @Pattern(regexp = "\\S+", message = "O campo [username] não deve conter espaço")
    private String username;
-   @Column(unique = true)
+   
+   @Column(unique = true, name = "email")
    @Email(message = "O campo[email] deve ser preenchido corretamente")
    private String email;
+   
+   @Column(name = "password")
    @Length(min = 8, max = 100, message = "O campo deve ter entre 8 à 100 caracteres")
    private String password;
 }

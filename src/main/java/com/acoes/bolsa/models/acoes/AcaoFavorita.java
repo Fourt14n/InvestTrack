@@ -7,6 +7,7 @@ import com.acoes.bolsa.models.user.entity.UserEntity;
 
 @Data
 @Entity (name = "favoritos")
+@Table(name = "favoritos")
 public class AcaoFavorita {
 
     @Id
@@ -14,8 +15,10 @@ public class AcaoFavorita {
     private Long id;
 
     @ManyToOne
+    @Column(name = "user")
     private UserEntity user;
-
+    
+    @Column(name = "actionCode")
     private String actionCode; // Ex: PETR4, VALE3
 
     public AcaoFavorita() {}
