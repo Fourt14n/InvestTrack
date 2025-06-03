@@ -14,7 +14,7 @@ public class AcaoFavorita {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @JoinColumn(name = "user")
     @Column(name = "user")
     private UserEntity user;
     
