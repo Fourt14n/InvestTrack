@@ -10,7 +10,7 @@ import java.util.UUID;
 
 
 @Data
-@Entity(name = "user")
+@Entity
 @Table(name = "user")
 public class UserEntity {
    @Id
