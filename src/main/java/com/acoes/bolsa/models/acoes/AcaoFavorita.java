@@ -12,14 +12,14 @@ public class AcaoFavorita {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "favId", unique = true)
     private Long id;
     
     @ManyToOne
-    @JoinColumn(name = "user")
+    @JoinColumn(name = "favUser")
     private UserEntity user;
     
-    @Column(name = "actionCode")
+    @Column(name = "favActionCode")
     private String actionCode; // Ex: PETR4, VALE3
 
     public AcaoFavorita() {}

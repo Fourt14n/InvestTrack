@@ -11,11 +11,11 @@ import java.util.UUID;
 
 @Data
 @Entity
-@Table(name = "user")
+@Table(name = "usuario")
 public class UserEntity {
    @Id
    @GeneratedValue(strategy = GenerationType.UUID)
-   @Column(name = "id")
+   @Column(name = "id", unique = true)
    private UUID id;
    
    @Column(name = "username")
