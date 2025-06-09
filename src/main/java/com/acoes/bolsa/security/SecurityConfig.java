@@ -23,9 +23,14 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .cors()  // Ativa CORS no Spring Security
-            .and()
             .csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.configurationSource(request -> {
+            	CorsConfiguration config = new CorsConfiguration();
+            	config.setAllowedOrigins(List.of("*"));
+            	config.setAllowedHeaders(List.of("*"));
+            	config.setAllowedMethods(List.of("*"));
+            	return config;
+            }))
             .authorizeHttpRequests(auth -> {
                 auth.requestMatchers("/user/**").permitAll()
                     .requestMatchers("/user/login").permitAll()
@@ -43,21 +48,6 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    
- // * PARA PARAR DE DAR ERRO DE CORS NA PARTE DOS FAVORITOSSSSSSS*
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("https://invest-track-front.vercel.app/**"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("*"));
-        config.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return source;
     }
 
 }
