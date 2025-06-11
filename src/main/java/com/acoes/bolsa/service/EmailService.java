@@ -12,7 +12,7 @@ public class EmailService {
     private JavaMailSender mailSender;
 
     public void sendResetPasswordEmail(String to, String token) {
-        String resetUrl = "http://localhost:3000/reset-password?token=" + token;
+        String resetUrl = "https://invest-track-front.vercel.app/atualizarSenha.html?token=" + token;
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject("Redefinição de senha - Investrack");
